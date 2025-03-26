@@ -3,6 +3,9 @@
 #include <string.h>
 #define FILE_NAME "record.dat"
 #include <math.h>
+#define LIBLARY_FILE "liblary.txt"
+#define TEACHER_FILE "teacher.txt"
+
      typedef struct student{
          int Admission_number;
          char name[20];
@@ -11,8 +14,15 @@
          char hobby[20];
          char email[30];
      }student;
-     student s;
+     typedef struct teacher{
+         int identity_no; //to be able to identify different teachers with number
+         char name[30];
+         int age;  //for retirement clarification.
+         char subject[30]; //teaching subject
+         char email[30]; //for better communication
+     }teacher;
      void Add_student(){
+         student s;
      int password = 808080;
     printf("Enter password to confirm you are working on this sector.\n");
     scanf("%d", &password);
@@ -66,6 +76,27 @@
         fclose(file);
      }
  }
+ void add_a_teacher(){
+     teacher t;
+     FILE* file = fopen("TEACHER_FILE", "a");
+     if(!file){
+        printf("Error in opening the file");
+        return;
+     }
+     printf("\nEnter the teacher identity number:\n");
+     scanf("%d", &t.identity_no);
+     printf("Enter name: \n");
+     scanf(" %[^\n]", t.name);
+     printf("Enter the age: \n");
+     scanf("%d", &t.age);
+     printf("Enter the subject you are teaching: \n");
+     scanf(" %[^\n]", t.subject);
+     printf("Enter your email for better communication: \n");
+     scanf(" [^\n]", t.email);
+     fprintf(file, "%d,%s,%d,%s,%s", t.identity_no, t.name, t.age, t.subject, t.email);
+     fclose(file);
+     printf("Teacher has been added successfully.\n");
+ }
 
 int main(){
     int choice;
@@ -77,7 +108,9 @@ int main(){
         printf("4. Check for student\' cluster points.");
         printf("5. Attend to Liblary services.\n");
         printf("6. Check if qualified.\n");
-        printf("7. Exit the program.\n");
+        printf("7. Add a new teacher to the system.\n");
+        printf("8. Check for a teachers details.\n")
+        printf("9. Exit the program.\n");
         scanf("%d", &choice);
          switch(choice){
         case 1:
@@ -87,6 +120,9 @@ int main(){
             check_for_details();
             break;
         case 7:
+            add_a_teacher();
+            break;
+        case 9:
             exit(0);
             break;
         default:
