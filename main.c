@@ -4,8 +4,10 @@
 #include <stdbool.h>
 #define FILE_NAME "record.txt"
 #include <math.h>
-#define LIBLARY_FILE "liblary.txt"
+#define LIBRARY_FILE "liblary.txt"
 #define TEACHER_FILE "teacher.txt"
+#define LIBRARY_USRE "library_user.txt"
+#define LIBRARY_BORROWED_RECORDS "library_records.txt"
     typedef struct book{
         int book_id;
         char author[50];
@@ -26,6 +28,38 @@
          char subject[30]; //teaching subject
          char email[30]; //for better communication
      }teacher;
+     void library_services(){ //let's have a library function that will handle all library cases.
+         int choice;
+         printf("Welcome to the library services enter any choice to proceed");
+         do{
+           printf("1. Add a book in the library.\n");
+           printf("2. Check for the book whether available in library.\n");
+           printf("3. Borrow a book form the library.\n");
+           printf("4. Pay for library charges.\n");
+           printf("5. Return a book in the library.\n");
+           printf("6. Register a library user.\n");
+           printf("7. Delete a book from the library.\n");
+           printf("8. Exit from the library services.\n");
+           printf("9. Search for a book in the library.\n");
+           scanf("%d", &choice);
+           switch(choice){
+           case 1:
+            add_book();
+            break;
+           case 2:
+            display_books();
+            break;
+           case 8:
+            exit(0);
+            break;
+            default:
+                 {
+               printf("Invalid choice!!! please try again.\n");
+            }
+            break;
+           }
+         }while(choice !=8);
+     }
      void add_book(){  //function to add a book to he system
          book b;
          FILE* file = fopen("LIBLARY_FILE", "a");
@@ -41,6 +75,20 @@
          scanf(" %[^\n]", b.author);
          fprintf(file, "%d,%s,%s", b.book_id,b.title,b.author);
          fclose(file);
+     }
+     void display_books(){
+         book b;
+         FILE *file = fopen(LIBRARY_FILE, "r");
+         if(file == NULL){
+            printf("Unable to open the file maybe there isn\'t book available. \n");
+            return;
+         }
+        printf("----BOOKS IN THE LIBRARY ARE-------\n");
+        while(fscanf(file, "%d,%49[^,],%49[^,]", b.book_id, b.title, b.author) == EOF){
+            printf("Book ID is: %d\n", b.book_id);
+            printf("Book\'s title is: %s\n", b.title);
+            printf("Book\'s author is: %s\n", b.author);
+        }
      }
      void Add_student(){
          student s;
@@ -135,32 +183,29 @@
         printf("Teacher\'s email is : %s\n", t.email);
      }
  }
- bool check_qualification(char *grade){
-     char a = 'A'; char b ='B'; char c = 'B+'; char d ='C+'; char e = 'B-';
-    // if(strcmp(grade, A) == 0|| strcmp(grade, B+) == 0 || strcmp(grade, B)==0 || strcmp(grade, B-)==0 ||strcmp(grade, C+)==0){
-    switch(grade){
-    case A:
-    case B+:
-    case B:
-    case B-:
-    case C+:
-        return true;
-    default :{
-        return false;
+ void check_qualification(){
+   char grade;
+    printf("Enter the grade to be examined.\n");
+    scanf(" %c", &grade);
+    if(grade == 'A' || grade == 'B' || grade == 'C' || grade == 'B+' || grade == 'C+' || grade == 'A-'){
+        printf("Congratulations have qualified for the institution.\n");
+        exit(0);
     }
+    else{
+        printf("Sorry you does not qualify for the institution but you can still one of our diploma courses.\n");
     }
  }
 
 int main(){
-    char grade;//for checking for qualification
+   //char grade;//for checking for qualification
     int choice;
     while(1){
-        printf("Enter your choice depending on the department you are working on\n");
+        printf("\nEnter your choice depending on the department you are working on\n");
         printf("1. Add a new student to the system.\n");
         printf("2. Check for a students details if already on system.\n");
         printf("3. Check if qualified for the institution.\n");
         printf("4. Check for student\' cluster points.");
-        printf("5. Attend to book to the liblary.\n");
+        printf("5. Attend to the services in the library.\n");
         printf("6. Check if qualified.\n");
         printf("7. Add a new teacher to the system.\n");
         printf("8. Check for a teachers details.\n");
@@ -175,14 +220,10 @@ int main(){
             displaystudents();
             break;
         case 3:
-            printf("Please enter your grade to be examined.\n");
-            scanf("%s", &grade);
-            if(check_qualification(grade)){
-                printf("Congratulations you have qualified for institution");
-            }
-            else{
-                printf("Sorry you haven\'t qualified but you can try one of our diploma courses");
-            }
+            check_qualification();
+            break;
+        case 5:
+            library_services();
             break;
 
         case 7:
