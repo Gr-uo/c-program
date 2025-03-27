@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdint.h>
 #define FILE_NAME "record.txt"
 #include <math.h>
 #define LIBRARY_FILE "liblary.txt"
