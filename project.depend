@@ -1,7 +1,8 @@
 # depslib dependency file v1.0
-1742819064 source:c:\users\student\desktop\project\main.c
+1743064467 source:c:\users\student\desktop\project\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
+	<stdbool.h>
 	<math.h>
 
