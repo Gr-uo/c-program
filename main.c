@@ -14,6 +14,11 @@
         char author[50];
         char title[50];
     }book;
+    struct Date{
+     int days;
+     int month;
+     int year;
+    };
      typedef struct student{
          int Admission_number;
          char name[20];
@@ -66,20 +71,54 @@
          }while(choice !=8);
      }
 void libray_charges(){
-    float charge_per_day = 4.9853400; // charge per day
-    float no_of_days = check_no_of_days();//call check_no_of_days and store the result in the no_of_days variable
+    float charge_per_day = 4.956070; // charge per day
+    int no_of_days = check_no_of_days();//call check_no_of_days and store the result in the no_of_days variable
     float charges = charge_per_day * no_of_days;  //multiply it by charge per day.
-    printf("Your Library overrall bill is: %f\n", charges);
+    printf("Your Library overall bill is: %.2f\n", charges);
     return;
 }
-float check_no_of_days(){
-    float d1,m1,y1,d2,m2,y2;
+int leap_year_check(int year){
+    if((year % 4 == 0 && year % 100 != 0)|| (year % 400 == 0))return 1;
+     else return 0;
+}
+int get_days_in_month(int month, int year){
+    switch(month){
+    case 1: case 3: case 5: case 7: case 8: case 10: case 12:
+        return 31;
+    case 4: case 6: case 9: case 11:
+        return 30;
+    case 2:
+        return leap_year_check(year)? 29 : 28;
+    default:
+        return 0;
+    }
+}
+int datedifference(struct Date date1, struct Date date2){
+    int totaldays1 = numberofdays(date1);
+    int totaldays2 = numberofdays(date2);
+    return abs(totaldays2 - totaldays1); // it will return absolute value hence will prevent getting negative answers.
+}
+int numberofdays(struct Date date){
+ int totalDays = 0;
+ // add the number of days before the given year
+ for(int i = 1; i < date.year; i++){
+    totalDays += leap_year_check(date.year)? 366: 365;
+ }
+ for (int i = 1; i < date.month; i++) {
+        totalDays += get_days_in_month(i, date.year);
+ }
+ totalDays += date.days; // add days to it to get the total number of days
+ return totalDays; // to be used by function that called or caller
+}
+int check_no_of_days(){
+    struct Date date1; struct Date date2;
     printf("Enter the date month and year which you borrowed the book(DD MM YY)\n");
-    scanf("%f %f %f", &d1, &m1, &y1);
+    scanf("%d %d %d", &date1.days, &date1.month, &date1.year);
     getchar(); // to consume the white spaces left possibly by scanf
-    printf("Enter the date month and year which you returned the book(DD MM YY)\n);
-    scanf("%f %f %f", &d2, &m2, &y2);
-    return abs(
+    printf("Enter the date month and year which you returned the book(DD MM YY)\n");
+    scanf("%d %d %d", &date2.days, &date2.month, &date2.year);
+     int no_of_days = datedifference(date1, date2);
+     return no_of_days;
 }
      void add_book(){  //function to add a book to he system
          book b;
