@@ -39,6 +39,7 @@
            printf("4. Pay for library charges.\n");
            printf("5. Return a book in the library.\n");
            printf("6. Register a library user.\n");
+           printf("10. Check the number of dates that user has exceeded to apply charges");
            printf("7. Delete a book from the library.\n");
            printf("8. Exit from the library services.\n");
            printf("9. Search for a book in the library.\n");
@@ -50,6 +51,9 @@
            case 2:
             display_books();
             break;
+               case  4:
+               library_charges();
+               break;
            case 8:
             exit(0);
             break;
@@ -61,6 +65,22 @@
            }
          }while(choice !=8);
      }
+void libray_charges(){
+    float charge_per_day = 4.9853400; // charge per day
+    float no_of_days = check_no_of_days();//call check_no_of_days and store the result in the no_of_days variable
+    float charges = charge_per_day * no_of_days;  //multiply it by charge per day.
+    printf("Your Library overrall bill is: %f\n", charges);
+    return;
+}
+float check_no_of_days(){
+    float d1,m1,y1,d2,m2,y2;
+    printf("Enter the date month and year which you borrowed the book(DD MM YY)\n");
+    scanf("%f %f %f", &d1, &m1, &y1);
+    getchar(); // to consume the white spaces left possibly by scanf
+    printf("Enter the date month and year which you returned the book(DD MM YY)\n);
+    scanf("%f %f %f", &d2, &m2, &y2);
+    return abs(
+}
      void add_book(){  //function to add a book to he system
          book b;
          FILE* file = fopen("LIBLARY_FILE", "a");
