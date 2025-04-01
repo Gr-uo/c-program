@@ -70,7 +70,7 @@
            }
          }while(choice !=8);
      }
-void libray_charges(){
+void library_charges(){
     float charge_per_day = 4.956070; // charge per day
     int no_of_days = check_no_of_days();//call check_no_of_days and store the result in the no_of_days variable
     float charges = charge_per_day * no_of_days;  //multiply it by charge per day.
@@ -122,7 +122,7 @@ int check_no_of_days(){
 }
      void add_book(){  //function to add a book to he system
          book b;
-         FILE* file = fopen("LIBLARY_FILE", "a");
+         FILE* file = fopen("LIBRARY_FILE", "a");
          if(!file){
             printf("Error in opening the file.\n");
             return;
@@ -144,7 +144,7 @@ int check_no_of_days(){
             return;
          }
         printf("----BOOKS IN THE LIBRARY ARE-------\n");
-        while(fscanf(file, "%d,%49[^,],%49[^,]", b.book_id, b.title, b.author) == EOF){
+        while(fscanf(file, "%d,%49[^,],%49[^,]", b.book_id, b.title, b.author) != EOF){
             printf("Book ID is: %d\n", b.book_id);
             printf("Book\'s title is: %s\n", b.title);
             printf("Book\'s author is: %s\n", b.author);
