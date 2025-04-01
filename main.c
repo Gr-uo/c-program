@@ -41,10 +41,10 @@
            printf("1. Add a book in the library.\n");
            printf("2. Check for the book whether available in library.\n");
            printf("3. Borrow a book form the library.\n");
-           printf("4. Pay for library charges.\n");
+           printf("4. Pay for library charges if you have exceeded the date appointed.\n");
            printf("5. Return a book in the library.\n");
            printf("6. Register a library user.\n");
-           printf("10. Check the number of dates that user has exceeded to apply charges");
+           printf("10. Check the number of dates that user has exceeded to apply charges\n");
            printf("7. Delete a book from the library.\n");
            printf("8. Exit from the library services.\n");
            printf("9. Search for a book in the library.\n");
@@ -144,7 +144,7 @@ int check_no_of_days(){
             return;
          }
         printf("----BOOKS IN THE LIBRARY ARE-------\n");
-        while(fscanf(file, "%d,%49[^,],%49[^,]", b.book_id, b.title, b.author) != EOF){
+        while(fscanf(file, "%d,%49[^,],%49[^,]", &b.book_id, b.title, b.author) == 3){
             printf("Book ID is: %d\n", b.book_id);
             printf("Book\'s title is: %s\n", b.title);
             printf("Book\'s author is: %s\n", b.author);
@@ -160,7 +160,7 @@ int check_no_of_days(){
       exit(0);
     }
     else{
-     FILE *file = fopen("FILE_NAME", "a");
+     FILE *file = fopen(FILE_NAME, "a");
      if(!file){
         printf("Error in opening the file");
         exit(1);
@@ -191,21 +191,22 @@ int check_no_of_days(){
  void displaystudents(){
      student s;
      FILE* file = fopen(FILE_NAME, "r");
-     if(!file){
-        printf("Error in opening the file maybe there is no student in the system.\n");
+     if(file == NULL){
+        perror("Error in opening the file maybe there is no student in the system.\n");
         exit(1);
      }
      printf("students in the list are: \n");
-     while(fscanf(file, "%d,%19[^,],%f,%29[^,],%19[^,],%29[^,]", s.Admission_number, s.name, s.marks, s.course, s.hobby, s.email) != EOF){
+     while(fscanf(file, "%d,%19[^,],%f,%29[^,],%19[^,],%29[^,]", &s.Admission_number, s.name, &s.marks, s.course, s.hobby, s.email) ==6){
         printf("\nAdmission number:%d\n",s.Admission_number);
-        printf("Name :%s", s.name);
-        printf("Marks :%f", s.marks);
-        printf("Course :%s", s.course);
-        printf("Hobby: %s", s.hobby);
-        printf("Email: %s", s.email);
-        fclose(file);
+        printf("Name :%s\n", s.name);
+        printf("Marks :%f\n", s.marks);
+        printf("Course :%s\n", s.course);
+        printf("Hobby: %s\n", s.hobby);
+        printf("Email: %s\n", s.email);
      }
+     fclose(file);
  }
+
  void add_a_teacher(){
      teacher t;
      FILE* file = fopen("TEACHER_FILE", "a");
@@ -235,7 +236,7 @@ int check_no_of_days(){
         return;
      }
      printf("------=teachers details are---------");
-     while(fscanf(file, "%d,%29[^,],%d,%29[^,],%29[^,]", t.identity_no, t.name, t.age, t.subject, t.email) != EOF){
+     while(fscanf(file, "%d,%29[^,],%d,%29[^,],%29[^,]", &t.identity_no, t.name, &t.age, t.subject, t.email) != EOF){
         printf("Teacher\'s ID : %d\n", t.identity_no);
         printf("Teacher\'s name: %s\n", t.name);
         printf("Teacher\'s age is: %d\n", t.age);
@@ -264,7 +265,7 @@ int main(){
         printf("1. Add a new student to the system.\n");
         printf("2. Check for a students details if already on system.\n");
         printf("3. Check if qualified for the institution.\n");
-        printf("4. Check for student\' cluster points.");
+        printf("4. Check for student\'s cluster points.\n");
         printf("5. Attend to the services in the library.\n");
         printf("6. Check if qualified.\n");
         printf("7. Add a new teacher to the system.\n");
@@ -296,7 +297,7 @@ int main(){
             exit(0);
             break;
         default:
-                printf("You have entered wrong choice try again.");
+                printf("You have entered wrong choice try again.\n");
          break;
         }
     }
