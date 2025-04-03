@@ -261,39 +261,30 @@ int main(){
    //char grade;//for checking for qualification
     int choice;
     while(1){
-        printf("\nEnter your choice depending on the department you are working on\n");
-        printf("1. Add a new student to the system.\n");
-        printf("2. Check for a students details if already on system.\n");
-        printf("3. Check if qualified for the institution.\n");
-        printf("4. Check for student\'s cluster points.\n");
-        printf("5. Attend to the services in the library.\n");
-        printf("6. Check if qualified.\n");
-        printf("7. Add a new teacher to the system.\n");
-        printf("8. Check for a teachers details.\n");
-        printf("9. Search for a teacher in the system.\n");
-        printf("10. Exit the program.\n");
+        //lemme form a function that will cutter for activities classified together instead of overloading the main function
+        printf("\nEnter your choice depending on the department you are working on\n\n");
+        printf("1. attend to student services.\n");
+        printf("2. Attend teachers services.\n");
+        printf("3. Attend to the services in the library.\n);
+        printf("4. Advanced adminstration services. \n);
+        printf("5. Exit the program.\n");
         scanf("%d", &choice);
          switch(choice){
         case 1:
-            Add_student();
+            student_services();
             break;
         case 2:
-            displaystudents();
+            teachers_services();
             break;
         case 3:
-            check_qualification();
-            break;
-        case 5:
             library_services();
             break;
-
-        case 7:
-            add_a_teacher();
+            ();
             break;
         case 8:
             check_for_teacher();
             break;
-        case 10:
+        case :
             exit(0);
             break;
         default:
