@@ -8,7 +8,7 @@
 #define DISPLINARYFILE "displinary.txt"
 #define LIBRARY_FILE "liblary.txt"
 #define TEACHER_FILE "teacher.txt"
-#define LIBRARY_USRE "library_user.txt"
+#define LIBRARY_USER "library_user.txt"
 #define LIBRARY_BORROWED_RECORDS "library_records.txt"
 int library_id = 1; // declare an integer variable which will be modified in any function for changes
     typedef struct book{
@@ -36,15 +36,15 @@ int library_id = 1; // declare an integer variable which will be modified in any
          char subject[30]; //teaching subject
          char email[30]; //for better communication
      }teacher;
-void advanced_adminstration_services(){   //function fo advanced adminstration services
+void advanced_adminstration_services(){   //function for advanced administration services
     int choice;
     do{
-    printf("\n Welcome to advanced adminstration services please proceed if you have authority only.\n");
+    printf("\n Welcome to advanced administration services please proceed if you have authority only.\n");
     printf(" Enter the choice depending on what you want to do.\n");
     printf("1. Remove a student in the system.\n");
     printf("2. Remove a teacher in the system (retired or transfered).\n");
-    printf("3. Culclate a salary for non-govermental teacher according to the days he has attended schooling.\n");
-    printf("4. Record a student displinary case.\n");
+    printf("3. Calculate a salary for non governmental teacher according to the days he has attended schooling.\n");
+    printf("4. Record a student disciplinary case.\n");
     printf("5. Exit the program.\n");
     scanf("%d", &choice);
     switch(choice){
@@ -64,11 +64,11 @@ void culclate_salary(){
     float salary_per_day = 1970.65;
 struct Date date1; struct Date date2;
     printf("\nEnter the last date you received the salary (dd mm yy)\n");
-    scanf(" %d %d %d", &date1.day, &date1.month, &date1.year);
+    scanf(" %d %d %d", &date1.days, &date1.month, &date1.year);
     printf("Enter the current date.\n");
-    scanf(" %d %d %d", &date2.day, &date2.month, &date2.year);
-    int datediff = datedifference(date1, date2);// call the date culclating function
-    float salary = salary_per_day * datediff; // cuclate the salary 
+    scanf(" %d %d %d", &date2.days, &date2.month, &date2.year);
+    int datediff = datedifference(date1, date2);// call the date calculating function
+    float salary = salary_per_day * datediff; // calculate the salary
     printf("Your salary is:  %.2f\n", salary);
 }
      void library_services(){ //let's have a library function that will handle all library cases.
@@ -111,8 +111,8 @@ struct Date date1; struct Date date2;
            }
          }while(choice !=10);
      }
-int get_library_id(){ 
-    int user_id = ++library;
+int get_library_id(){
+    int user_id = ++library_id;
     return user_id;
 }
 void add_library_user(){
@@ -130,8 +130,8 @@ void add_library_user(){
     getchar();
     int library_id = get_library_id();
     scanf("%d", &library_id);
-    fprintf(file, "%s, %d, %d", s.name, s.admission_number, library_id);
-    fclose(file);
+    fprintf(ptr, "%s, %d, %d", s.name, s.Admission_number, library_id);
+    fclose(ptr);
     printf("student has been added successful as a library user.\n");
 }
 void library_charges(){
@@ -219,14 +219,14 @@ void student_services(){
     do{
     printf("\n Welcome to student services. Enter the choice according to what you want to do.\n");
     printf("1. Add a student to the system.\n");
-    printf("2. Chech for a students details if available in the system.\n");
+    printf("2. Check for a students details if available in the system.\n");
     printf("3. Check if qualified for the institution.\n");
-    printf("4. Culclate a student\'s cut-off points.\n");  
+    printf("4. Calculate a student\'s cut-off points.\n");
     printf("5. Exit the program.\n");
-    scanf("%d", &choice):
+    scanf("%d", &choice);
         switch(choice){
         case 1:
-        add_student();
+        Add_student();
         break;
         case 2:
         displaystudents();
@@ -241,7 +241,7 @@ void student_services(){
         exit(0);
         break;
         default:
-        printf("Invalid choice try again"\n);
+        printf("Invalid choice try again\n");
         break;
     }
     }while(choice != 5);
@@ -318,14 +318,14 @@ void culclate_cut_off_points(){
  }
 void teachers_services(){
     int choice;
-    printf("\n Welcome to services teachers available in the system. Enter a choice depending on what you want"\n);
+    printf("\n Welcome to services teachers available in the system. Enter a choice depending on what you want\n");
     printf("1. Add a teacher to the system.\n");
-    printf("2. Check for a teacher\'s details if he/she is in the system"\n);
+    printf("2. Check for a teacher\'s details if he/she is in the system\n");
     printf("3. Remove a teacher from system (old age or transfered).\n");
-    printf("4. Exit the program.\n\n);
+    printf("4. Exit the program.\n\n");
         scanf("%d", &choice);
     switch(choice){
-        case 1: 
+        case 1:
         add_a_teacher();
          break;
         case 2:
@@ -398,8 +398,8 @@ int main(){
         printf("\nEnter your choice depending on the department you are working on\n\n");
         printf("1. attend to student services.\n");
         printf("2. Attend teachers services.\n");
-        printf("3. Attend to the services in the library.\n);
-        printf("4. Advanced adminstration services. \n);
+        printf("3. Attend to the services in the library.\n");
+        printf("4. Advanced administration services. \n");
         printf("5. Exit the program.\n");
         scanf("%d", &choice);
          switch(choice){
