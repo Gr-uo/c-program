@@ -21,6 +21,27 @@ int library_id = 1; // declare an integer variable which will be modified in any
      int month;
      int year;
     };
+    typedef struct removeteacher{ //a structure(doubly linked) list for holding teachers deleted from the system
+        struct removeteacher* previous;
+        int age;
+        char name[20];
+        char email[20];
+        char subject[20];
+        struct removeteacher* next;
+    }Rmteacher;
+    Rmteacher* parent = NULL;
+    typedef struct remove_student{ // a structure to hold a removed student from the system
+        struct remove_student* previous;
+        int student_id;
+        char* name;
+        struct remove_student* next;
+    }Rm_student;
+    Rm_student* root = NULL;// I need a global declaration to avoid overloading the funcion
+    struct blacklisted{ // I'm going to use a singly linked list here
+        int student_id;
+        char* name;
+        struct blacklisted* next;
+    };
      typedef struct student{
          int Admission_number;
          char name[20];
@@ -45,21 +66,110 @@ void advanced_adminstration_services(){   //function for advanced administration
     printf("2. Remove a teacher in the system (retired or transfered).\n");
     printf("3. Calculate a salary for non governmental teacher according to the days he has attended schooling.\n");
     printf("4. Record a student disciplinary case.\n");
-    printf("5. Exit the program.\n");
+    printf("5. display students removed student in the system\n");
+    printf("6. View teachers removed from system.\n");
+    printf("7. Exit the program.\n");
     scanf("%d", &choice);
     switch(choice){
-        case 3:
+    case 1:
+        remove_student_fromSystem();
+        break;
+    case 2:
+        remove_teacher();
+        break;
+    case 3:
         culclate_salary();
         break;
-        case 5:
+   // case 4:
+
+    case 5:
+        display_students_removed();
+        break;
+    case 6:
+        display_removed_teacher();
+        break;
+    case 7:
         exit(0);
         break;
-        default:
+    default:
         printf("You have entered an invalid choice try again.\n");
         break;
     }
-    }while(choice != 5);
+    }while(choice != 7);
 }
+void remove_teacher(){
+    int age;
+    char email[20];
+    char name[20];
+    char subject[20];//let's take inputs of teachers to be removed from the system
+    printf("Enter the details of a teacher to be removed from the system in this order. 1. Name 2. Age 3. Subject 4. Email.\n");
+    fgets(name, sizeof(name), stdin);
+    scanf("%d", &age);
+    fgets(subject, sizeof(subject), stdin);
+    fgets(email, sizeof(email), stdin);//let's now store the values
+    //allocate firs memory in heap
+    Rmteacher* ptr = (Rmteacher*)malloc(sizeof(Rmteacher));
+    ptr->name = name;
+    ptr->age = age;
+    ptr ->email = email;
+    ptr ->subject = subject;
+    ptr -> next = NULL;
+    ptr ->previous = NULL;
+    if(parent == NULL){
+        parent = ptr;
+    }
+    Rmteacher* temp = parent;// if parent is not equal to null
+    while(temp->next != NULL){
+        //we need to  traverse in order to add
+        temp = temp->next;
+    }
+    temp->next = ptr;
+    ptr->prev = temp;
+    return; //to the caller of the function
+}
+void display_removed_teacher(){
+    Rmteacher* temp = (Rmteacher*)malloc(sizeof(Rmteacher));
+    temp = parent; // we are doing these not to loose reference to the parent which points to whole list
+    while(temp != NULL){
+        printf("Removed teacher\'s name is %s: ", temp->name);
+        printf("Removed teacher\'s age is %d: ", temp->age);
+        printf("Removed teacher\'s teaching subject is is %s: ", temp->subject);
+        printf("Removed teacher\'s email is %s: ", temp->email);
+    }
+}
+void display_students_removed(){
+    Rm_student* ptr = root;
+    while(ptr != NULL){
+        printf("%d\n", ptr->student_id);
+        printf("%s\n", ptr->name);
+        ptr = ptr->next;
+        return;
+    }
+}
+void remove_student_fromSystem(){
+    int student_id; char student_name[50];
+    Rm_student* ptr = (Rm_student*)malloc(sizeof(Rm_student));
+    // Take input from the user on the student to remove from the system
+    printf(" Enter the Id of student to be removed followed with student\'s name respectively\n");
+    scanf("%d", &student_id);
+    scanf(" %[^\n]", student_name);
+    ptr->name = student_name;
+    ptr->student_id = student_id;
+     ptr->next = NULL;
+    (*ptr).previous = NULL;
+    if(root == NULL){ //check if root is null then there is no student removed we should add one to root
+      root = ptr;
+    }
+    Rm_student * last = root;
+    while(last->next != NULL){
+            last = last->next;
+    }
+    last->next = ptr;
+    ptr->previous = last;
+    printf("Student added to the deleted student list.\n");
+    return;
+}
+
 void culclate_salary(){
     float salary_per_day = 1970.65;
 struct Date date1; struct Date date2;
@@ -292,8 +402,8 @@ void culclate_cut_off_points(){
     scanf(" %f %f %f %f", &e, &f, &g, &h);
     float coresubjects = a + b + c + d;
     float allSubjects = coresubjects + (e + f + g + h);
-    float firstculclation = 48 / coresubjects;
-    float secondculclation = 84 / allSubjects;
+    float firstculclation = coresubjects / 48;
+    float secondculclation = allSubjects / 84;
     float thirdculclation = firstculclation * secondculclation;
     float answer = sqrt(thirdculclation) * 48.000;
     printf("Your cut off point is: %.7f you can use it to check for courses that you are qualified for.\n", answer);
@@ -383,7 +493,7 @@ void teachers_services(){
     scanf(" %c", &grade);
     if(grade == 'A' || grade == 'B' || grade == 'C' || grade == 'B+' || grade == 'C+' || grade == 'A-'){
         printf("Congratulations have qualified for the institution.\n");
-        exit(0);
+        return;
     }
     else{
         printf("Sorry you does not qualify for the institution but you can still one of our diploma courses.\n");
