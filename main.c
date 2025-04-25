@@ -11,12 +11,26 @@
 #define TEACHER_FILE "teacher.txt"
 #define LIBRARY_USER "library_user.txt"
 #define LIBRARY_BORROWED_RECORDS "library_records.txt"
+struct courses{ // a structure to hold courses offered by the institution
+   char *coursename;
+   struct course* next;
+};
+struct courses* root1 = NULL;
 int library_id = 1; // declare an integer variable which will be modified in any function for changes
     typedef struct book{
         int book_id;
         char author[50];
         char title[50];
     }book;
+    /*I want to create another structure for holding borrowed books it may seem a repetition but first
+    structure fits file system I want one for data structure to be specific linked list*/
+    struct Book{
+        int book_id;
+        char *author;
+        char *title;
+        struct Book* link;
+    }Book;
+     struct Book* founder = NULL;
     struct borrow{
         int admission;
         char *name;
@@ -236,6 +250,7 @@ struct Date date1; struct Date date2;
            printf("9. Delete a book from the library.\n");
            printf("10. Exit from the library services.\n");
            printf("11. Search for a book in the library.\n");
+           printf("12. Add book to the structure of borrowed books.\n");
            scanf("%d", &choice);
            switch(choice){
            case 1:
@@ -244,7 +259,7 @@ struct Date date1; struct Date date2;
            case 2:
             display_books();
             break;
-           case 3:
+           case 3: // there is one thing also before borrowing book a user must be in library file
             borrow();
             break;
                case  4:
@@ -256,8 +271,17 @@ struct Date date1; struct Date date2;
             case 6:
                add_library_user();
                break;
+            case 7:
+                displayBorrow();
+                break;
+            case 8:
+                checkdateExceeded();
+                break;
            case 10:
             exit(0);
+            break;
+           case 12:
+            addborrow();
             break;
             default:
                  {
@@ -266,6 +290,56 @@ struct Date date1; struct Date date2;
             break;
            }
          }while(choice !=10);
+     }
+     void addborrow(){
+          struct Book* temp = (struct Book*)malloc(sizeof(struct Book));
+          if(!temp){
+            printf("Memory allocation failed.\n");
+            return 1;
+          }
+         char author[20];
+         char title[15];
+         int book_id;
+         printf("Enter the title of the book that has been borrowed.\n");
+         scanf(" %[^\n]", author);
+         printf("Enter the author of the book borrowed.\n");
+         scanf(" %[^\n]", title);
+         printf("Enter the book ID(it may be SBN of the book).\n");
+         scanf("%d", &book_id);
+         temp->author = author;
+         temp ->title = title;
+         temp->book_id = book_id;
+         temp->link = NULL;
+         if(founder == NULL){
+            founder = temp;
+            return;
+         }
+         struct Book* temp1 = founder;
+         while(temp1->link != NULL){
+            temp1 = temp1->link;
+         }
+         temp1->link = temp;
+     }
+
+     void displayBorrow(){
+         // here we wanna traverse the books that are borrowed and print them one by one
+         struct Book* temp = founder;
+         while(temp != NULL){
+            printf("The book\'s author is %s: \n", temp->author);
+            printf("The book\'s title is %s: \n", temp->title);
+            printf("The book\'s ID is %d: \n",temp->book_id);
+            temp = temp->link;
+         }
+     }
+     void checkdateExceeded(){
+         struct Date date1;
+         struct Date date2;
+         printf("Enter the date that the user borrowed the book in form of(dd mm yyyy).\n");
+         scanf("%d %d %d", date1.days, date1.month, date1.year);
+         printf("Enter the date that you are returning the book in form (dd mm yyyy).\n");
+         printf("%d %d %d", date2.days, date2.month, date2.year);
+         int datediff = datedifference(date1, date2);
+         printf("You have exceeded the allocated days by %d days.\n", datediff);
      }
      void returnbook(){ // this is just basically deleting a student from borrow
         //first is to delete the student from borrowers
@@ -375,7 +449,8 @@ int numberofdays(struct Date date){
  return totalDays; // to be used by function that called or caller
 }
 int check_no_of_days(){
-    struct Date date1; struct Date date2;
+    struct Date date1;
+    struct Date date2;
     printf("Enter the date month and year which you borrowed the book(DD MM YY)\n");
     scanf("%d %d %d", &date1.days, &date1.month, &date1.year);
     getchar(); // to consume the white spaces left possibly by scanf
@@ -521,7 +596,7 @@ void teachers_services(){
     printf("\n Welcome to services teachers available in the system. Enter a choice depending on what you want\n");
     printf("1. Add a teacher to the system.\n");
     printf("2. Check for a teacher\'s details if he/she is in the system\n");
-    printf("3. Remove a teacher from system (old age or transfered).\n");
+    //printf("3. Remove a teacher from system (old age or transfered).\n");
     printf("4. Exit the program.\n\n");
         scanf("%d", &choice);
     switch(choice){
@@ -531,7 +606,7 @@ void teachers_services(){
         case 2:
         check_for_teacher();
          break;
-//        case 3:
+//        case 3:This is implemented in advance administration services.
         case 4:
         exit(0);
          break;
@@ -589,6 +664,35 @@ void teachers_services(){
         printf("Sorry you does not qualify for the institution but you can still one of our diploma courses.\n");
     }
  }
+ void schoolcourses(){
+     struct courses* ptr = root1;
+     while(ptr != NULL){
+        printf("  %s\n", ptr->coursename);
+        ptr = ptr->next;
+     }
+ }
+ void others(){
+     int choice;
+     while(1){
+     printf("\n Welcome to other parts of service offered with this institution select choice depending on what you want to do\n");
+     printf("1. Take a look of services offered by the institution");
+     printf("2. Exit the program.\n");
+     scanf("%d\n", &choice);
+     switch(choice){
+     case 1:
+        schoolcourses();
+        break;
+     case 2:
+        exit(EXIT_SUCCESS);
+        break;
+     default:
+        {
+            printf("It seems like you have entered an invalid choice try again.\n");
+        }
+        break
+     }
+     }
+ }
 
 int main(){
    //char grade;//for checking for qualification
@@ -601,6 +705,7 @@ int main(){
         printf("3. Attend to the services in the library.\n");
         printf("4. Advanced administration services. \n");
         printf("5. Exit the program.\n");
+        printf("6. Other activities.\n");
         scanf("%d", &choice);
          switch(choice){
         case 1:
@@ -617,6 +722,9 @@ int main(){
              break;
         case 5:
             exit(0);
+            break;
+        case 6:
+            others();
             break;
         default:
                 printf("You have entered wrong choice try again.\n");
