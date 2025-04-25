@@ -1,3 +1,4 @@
+/*Note that this is a program and as other softwares it way have shortcomings which needs to be updated*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,6 +17,12 @@ int library_id = 1; // declare an integer variable which will be modified in any
         char author[50];
         char title[50];
     }book;
+    struct borrow{
+        int admission;
+        char *name;
+        struct borrow* next;
+    };
+    struct borrow* origin = NULL;
     struct Date{
      int days;
      int month;
@@ -24,9 +31,9 @@ int library_id = 1; // declare an integer variable which will be modified in any
     typedef struct removeteacher{ //a structure(doubly linked) list for holding teachers deleted from the system
         struct removeteacher* previous;
         int age;
-        char name[20];
-        char email[20];
-        char subject[20];
+        char *name;
+        char *email;
+        char *subject;
         struct removeteacher* next;
     }Rmteacher;
     Rmteacher* parent = NULL;
@@ -36,12 +43,13 @@ int library_id = 1; // declare an integer variable which will be modified in any
         char* name;
         struct remove_student* next;
     }Rm_student;
-    Rm_student* root = NULL;// I need a global declaration to avoid overloading the funcion
+    Rm_student* root = NULL;// I need a global declaration to avoid overloading the function
     struct blacklisted{ // I'm going to use a singly linked list here
         int student_id;
         char* name;
         struct blacklisted* next;
     };
+    struct blacklisted* mother = NULL;
      typedef struct student{
          int Admission_number;
          char name[20];
@@ -65,10 +73,11 @@ void advanced_adminstration_services(){   //function for advanced administration
     printf("1. Remove a student in the system.\n");
     printf("2. Remove a teacher in the system (retired or transfered).\n");
     printf("3. Calculate a salary for non governmental teacher according to the days he has attended schooling.\n");
-    printf("4. Record a student disciplinary case.\n");
+    printf("4. Record a student disciplinary case.\n");//just to hold their details in a structure
     printf("5. display students removed student in the system\n");
     printf("6. View teachers removed from system.\n");
     printf("7. Exit the program.\n");
+    printf("8. View students in disciplinary cases.\n");
     scanf("%d", &choice);
     switch(choice){
     case 1:
@@ -80,8 +89,9 @@ void advanced_adminstration_services(){   //function for advanced administration
     case 3:
         culclate_salary();
         break;
-   // case 4:
-
+   case 4:
+      disciplinary();
+      break;
     case 5:
         display_students_removed();
         break;
@@ -91,17 +101,47 @@ void advanced_adminstration_services(){   //function for advanced administration
     case 7:
         exit(0);
         break;
+    case 8:
+        view_disciplinary();
+        break;
     default:
         printf("You have entered an invalid choice try again.\n");
         break;
     }
     }while(choice != 7);
 }
+void view_disciplinary(){
+    struct blacklisted* temp = mother;
+    while(temp != NULL){
+        printf("The student\'s name is %s: \n",temp->name);
+        printf("The student\'s admission is %d\n", temp->student_id);
+        temp = temp->next;
+    }
+}
+void disciplinary(){
+    int admission;
+    char name[20];
+    struct blacklisted* ptr = (struct blacklisted*)malloc(sizeof(struct blacklisted));
+    printf("Enter the admission of the student followed with the student name.\n");
+    scanf("%d\n", &admission);
+    fgets(name, sizeof(name), stdin);
+    ptr -> name = name;
+    ptr -> student_id = admission;
+    ptr -> next = NULL;
+    if(mother == NULL){
+        mother = ptr;
+    }
+    struct blacklisted* son = mother;
+    while(son != NULL){
+        son = son -> next;
+    }
+    son->next = ptr;
+}
 void remove_teacher(){
     int age;
-    char email[20];
-    char name[20];
-    char subject[20];//let's take inputs of teachers to be removed from the system
+    char *email;
+    char *name;
+    char *subject;//let's take inputs of teachers to be removed from the system
     printf("Enter the details of a teacher to be removed from the system in this order. 1. Name 2. Age 3. Subject 4. Email.\n");
     fgets(name, sizeof(name), stdin);
     scanf("%d", &age);
@@ -124,7 +164,7 @@ void remove_teacher(){
         temp = temp->next;
     }
     temp->next = ptr;
-    ptr->prev = temp;
+    ptr->previous = temp;
     return; //to the caller of the function
 }
 void display_removed_teacher(){
@@ -204,9 +244,15 @@ struct Date date1; struct Date date2;
            case 2:
             display_books();
             break;
+           case 3:
+            borrow();
+            break;
                case  4:
                library_charges();
                break;
+               case 5:
+                returnbook();//we need to delete the student first from borrowers
+                break;
             case 6:
                add_library_user();
                break;
@@ -220,6 +266,50 @@ struct Date date1; struct Date date2;
             break;
            }
          }while(choice !=10);
+     }
+     void returnbook(){ // this is just basically deleting a student from borrow
+        //first is to delete the student from borrowers
+        int admission;
+        printf("Enter the admission of the student.\n");
+        scanf("%d\n", &admission);
+        if(admission = origin->admission){
+            struct borrow* abc = origin;
+            origin = origin->next;
+            free(abc);
+        }
+        //else we need to traverse before deleting.
+        struct borrow* xyz = NULL;
+        struct borrow* pxrst = origin;
+        while(pxrst->next != NULL && admission != pxrst->admission){
+            xyz = pxrst;
+            pxrst = pxrst -> next;
+        }
+        xyz = pxrst->next;
+        free(pxrst);
+     }
+     void borrow(){// this function is to add you in a structure that you have borrowed a book
+         struct borrow* temp = (struct borrow*)malloc(sizeof(struct borrow));
+         if(!temp){
+            printf("Error in memory allocation.\n");
+            return 1;
+         }
+         int admission;
+         char name[20];
+         printf("Enter the name of the person borrowing the book.\n");
+         fgets(name, sizeof(name), stdin);
+         printf("Enter the name of the admission borrowing the book.\n");
+         scanf("%d\n", &admission);
+         temp->name = name;
+         temp -> admission = admission;
+         temp -> next = NULL;
+         if(origin == NULL){
+            origin = temp;
+         }
+         struct borrow* last = origin;
+         while(last -> next != NULL)
+            last = last->next;
+         last -> next = temp;
+
      }
 int get_library_id(){
     int user_id = ++library_id;
